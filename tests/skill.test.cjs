@@ -9,16 +9,16 @@ test('invocation copies a skill name or an explicit custom prompt and survives e
  M.save(state,'s',{title:'新名称',url},'unused');assert.equal(M.invocation(state.skills[0]),'请调用 /pptx，制作培训课件。');
  assert.equal(M.invocation(JSON.parse(JSON.stringify(state.skills[0]))),'请调用 /pptx，制作培训课件。');
 });
-test('a fresh browser receives all five samples once and deletions survive reload',()=>{
- const state={skills:[],notes:[{id:'old-note'}]};M.initializeSamples(state);
- assert.equal(state.skills.length,5);assert(state.skills.every(s=>s.status==='saved'));assert.equal(state.notes[0].id,'old-note');
- const saved=JSON.parse(JSON.stringify(state));M.initializeSamples(saved);assert.equal(saved.skills.length,5);
- const removed=saved.skills.pop();M.initializeSamples(saved);assert.equal(saved.skills.length,4);assert(!saved.skills.some(s=>s.id===removed.id));
+test('a fresh browser receives no default skills and reload stays empty',()=>{
+ const state={skills:[],notes:[{id:'old-note'}]};M.initialize(state);
+ assert.deepEqual(state.skills,[]);assert.equal(state.notes[0].id,'old-note');
+ const saved=JSON.parse(JSON.stringify(state));M.initialize(saved);assert.deepEqual(saved.skills,[]);
 });
-test('sample initialization keeps existing collections, custom edits and pins without duplicate URLs',()=>{
- const item={id:'existing',url:'https://github.com/anthropics/skills/tree/main/skills/pptx/',title:'我的修改',status:'active',pinned:true};
- const state={skills:[item,{id:'mine',title:'其他收藏',url:'https://example.com/skill'}]};M.initializeSamples(state);
- assert.equal(state.skills.length,6);assert.deepEqual(state.skills.find(s=>s.id==='existing'),item);assert.equal(state.skills.filter(s=>M.link(s.url)===M.link(item.url)).length,1);
+test('collection initialization keeps existing custom edits and pins, without adding records',()=>{
+ const item={id:'sample-skill-pptx',url:'https://example.com/edited-skill',title:'我的修改',status:'active',pinned:true};
+ const state={skills:[item,{id:'mine',title:'其他收藏',url:'https://example.com/skill'}],skillSamplesVersion:1};M.initialize(state);
+ assert.equal(state.skills.length,2);assert.deepEqual(state.skills[0],item);
+ state.skills=[];M.initialize(state);assert.deepEqual(state.skills,[]);
 });
 test('accept repository and skill directory links and reject executable or credential-bearing URLs',()=>{
  assert.equal(M.link('github.com/owner/repo/'),'https://github.com/owner/repo');

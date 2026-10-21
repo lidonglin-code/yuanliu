@@ -1,13 +1,13 @@
 const test=require('node:test'),assert=require('node:assert/strict'),M=require('../dist/agent-model.js');
-test('website samples initialize in a fresh browser once and respect later removals',()=>{
- const state={agents:[],skills:[{id:'s'}]};M.initializeSamples(state);
- assert.equal(state.agents.length,5);assert(state.agents.every(s=>s.status==='saved'));assert.equal(state.skills.length,1);
- const persisted=JSON.parse(JSON.stringify(state));M.initializeSamples(persisted);assert.equal(persisted.agents.length,5);
- const removed=persisted.agents.pop();M.initializeSamples(persisted);assert.equal(persisted.agents.length,4);assert(!persisted.agents.some(s=>s.id===removed.id));
+test('new website collections remain empty across reloads',()=>{
+ const state={agents:[],skills:[{id:'s'}]};M.initialize(state);
+ assert.deepEqual(state.agents,[]);assert.equal(state.skills.length,1);
+ const persisted=JSON.parse(JSON.stringify(state));M.initialize(persisted);assert.deepEqual(persisted.agents,[]);
 });
-test('initialization preserves existing site URLs, descriptions, statuses and pins',()=>{
- const existing={id:'mine',title:'我的工具导航',url:'https://ai-bot.cn',description:'自己的使用心得',status:'active',pinned:true};
- const state={agents:[existing]};M.initializeSamples(state);assert.equal(state.agents.length,5);assert.deepEqual(state.agents.find(s=>s.id==='mine'),existing);
+test('initialization preserves only existing site URLs, descriptions, statuses and pins',()=>{
+ const existing={id:'mine',title:'我的工具导航',url:'https://example.com',description:'自己的使用心得',status:'active',pinned:true};
+ const state={agents:[existing],agentSamplesVersion:1};M.initialize(state);assert.equal(state.agents.length,1);assert.deepEqual(state.agents[0],existing);
+ state.agents=[];M.initialize(state);assert.deepEqual(state.agents,[]);
 });
 test('website collections are independent from skills and preserve user edits',()=>{
  const state={skills:[{id:'s',url:'https://example.com',title:'原有 Skill'}],agents:[]};
