@@ -118,6 +118,28 @@
     if(!id)throw Error('缺少保存记录。');
     Object.assign(message,{confirmed:true,targetType:type,targetId:id});
   }
-  const api={shiftDate,planningGroups,creationSeed,inboxTargets,finishInbox,closeout,completeProject,completeAssistantAction,status,bucket,overdue,calendarDate,dailyFocus,homeCue,weekDays,monthDays,shiftMonth,reschedule,nextTask,nextText,taskReminders,saveRecord};
+  // Validate the whole selection before changing any record. A proposal is consumed once,
+  // even if its task is later deleted; editing uses this same save path.
+  function saveAssistantTasks(state,index,entries){
+    const message=state.aiMessages?.[index],seen=new Set(),ids=new Set(state.tasks.map(t=>t.id));
+    if(message?.role!=='assistant'||!entries.length)throw Error('请选择要保存的建议。');
+    const signature=t=>JSON.stringify([t.title?.trim(),t.projectId||'',t.moduleId||'',t.plannedDate||'',t.due||'']);
+    const existing=new Set(state.tasks.filter(t=>!t.done).map(signature));
+    for(const {suggestionIndex,item} of entries){
+      const suggestion=message.suggestions?.[suggestionIndex];
+      if(!suggestion||seen.has(suggestionIndex))throw Error('建议清单已变化，请重新选择。');
+      if(suggestion.confirmed)throw Error('这条建议已保存，请打开已有任务。');
+      if(!item?.id||ids.has(item.id)||!item.title?.trim())throw Error('任务内容不完整，请修改后添加。');
+      if(existing.has(signature(item)))throw Error('已有相同名称、归属和日期的未完成任务，请查看已有任务或修改建议。');
+      seen.add(suggestionIndex);ids.add(item.id);existing.add(signature(item));
+    }
+    for(const {suggestionIndex,item} of entries){
+      Object.assign(item,{sourceAssistantId:message.id||'legacy:'+index,sourceSuggestionIndex:suggestionIndex});
+      saveRecord(state,'task',item);
+      Object.assign(message.suggestions[suggestionIndex],{confirmed:true,targetId:item.id,targetType:'task',confirmedAt:new Date().toISOString()});
+    }
+    return entries.map(entry=>entry.item);
+  }
+  const api={shiftDate,planningGroups,creationSeed,inboxTargets,finishInbox,closeout,completeProject,completeAssistantAction,saveAssistantTasks,status,bucket,overdue,calendarDate,dailyFocus,homeCue,weekDays,monthDays,shiftMonth,reschedule,nextTask,nextText,taskReminders,saveRecord};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.WorkflowModel=api;
 })(typeof window==='undefined'?globalThis:window);
