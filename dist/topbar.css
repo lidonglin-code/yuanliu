@@ -1,0 +1,53 @@
+/* Primary actions stay visible; preferences and context have quieter homes. */
+.shell .top-tools{gap:15px}
+.shell .top-tools .search{min-width:0;padding:8px 13px}
+.shell .search input{width:125px}
+.shell .ai-tools{gap:2px;position:relative}
+.shell .top-tools .assistant-link{padding:8px 3px}
+.ai-tools-menu{position:relative}
+.ai-tools-menu>summary{display:grid;place-items:center;width:24px;height:30px;border-radius:6px;cursor:pointer;list-style:none;color:var(--muted)}
+.ai-tools-menu>summary::-webkit-details-marker{display:none}
+.ai-tools-menu>summary svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.ai-tools-menu[open]>summary,.ai-tools-menu>summary:hover{background:var(--surface-raised);color:var(--ink)}
+.ai-tools-panel{position:absolute;right:0;top:41px;width:244px;padding:8px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);box-shadow:0 16px 50px #0003;z-index:25;white-space:normal}
+.ai-tools-panel .memory-link{display:block;padding:12px;border-radius:7px;color:var(--ink)}
+.ai-tools-panel .memory-link strong{display:block;font-size:12px;font-weight:500}
+.ai-tools-panel .memory-link small{display:block;margin-top:5px;font-size:10px;line-height:1.7;color:var(--muted)}
+.ai-tools-panel .memory-link:hover{background:var(--surface-raised)}
+.workspace-utility-panel{width:244px;max-height:calc(100dvh - 90px);overflow:auto;padding:13px}
+.utility-divider{height:1px;background:var(--line);margin:8px 9px 15px}
+.workspace-utility-panel .utility-kicker{padding:5px 10px 7px;font-size:9px;letter-spacing:1.5px}
+.shell .topbar .workspace-utility-panel #settings-link,.workspace-utility-panel #theme-toggle{position:static;display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;height:auto;min-height:38px;margin:0;padding:9px 10px;border:0;border-radius:7px;background:none;color:var(--ink);font-size:12px;text-align:left;white-space:nowrap}
+.workspace-utility-panel #theme-toggle svg{width:15px;height:15px;flex-shrink:0}
+.shell .topbar .workspace-utility-panel #settings-link{padding-left:10px}
+.shell .topbar .workspace-utility-panel #settings-link:hover,.workspace-utility-panel #theme-toggle:hover{background:var(--surface-raised);color:var(--accent)}
+.workspace-utility-panel .utility{color:var(--ink)}
+html[data-theme=light] .ai-tools-panel{box-shadow:0 16px 50px #34304d18}
+@media(max-width:680px){
+ .shell .topbar .top-tools>.button{margin-right:30px}
+ .shell .ai-tools{grid-column:2;grid-row:2;justify-self:end;gap:2px}
+ .shell .top-tools .search{padding:8px 11px}
+ .shell .search input{width:100%}
+ .ai-tools-panel{right:0;top:36px;width:min(244px,calc(100vw - 46px))}
+ .workspace-utility-panel{top:38px;right:0;width:min(244px,calc(100vw - 38px))}
+}
+
+/* Main navigation has a readable type scale and generous, stable hit areas. */
+#navigation.workspace-nav{gap:14px}
+#navigation .workspace-nav-link{display:flex;align-items:center;justify-content:center;min-height:46px;padding:10px 12px;font-size:16px;font-weight:500;line-height:1.6;letter-spacing:.5px;border-radius:8px;color:#aeb8d1}
+#navigation .workspace-nav-link:hover{background:#a79ac211;color:#ece6fa}
+#navigation .workspace-nav-link.active{font-weight:600;color:#e5d9fa}
+#navigation .workspace-nav-link:after{left:50%;right:auto;bottom:2px;width:26px;height:2px;border-radius:2px;transform:translateX(-50%);background:#b7a2db}
+html[data-theme=light] #navigation .workspace-nav-link{color:#596581}
+html[data-theme=light] #navigation .workspace-nav-link:hover{color:#634984;background:#e9e3f35e}
+html[data-theme=light] #navigation .workspace-nav-link.active{color:#624381}
+html[data-theme=light] #navigation .workspace-nav-link:after{background:#8c6eb3}
+@media(min-width:681px) and (max-width:1400px){#navigation.workspace-nav{gap:22px;padding-top:2px;padding-bottom:8px}}
+@media(max-width:680px){
+ #navigation.workspace-nav{gap:5px;padding-bottom:8px}
+ #navigation .workspace-nav-link{min-height:44px;padding:9px 8px;font-size:14px;letter-spacing:.3px}
+}
+@media(max-width:520px){
+ #navigation.workspace-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 8px;overflow:visible}
+ #navigation .workspace-nav-link{width:100%;min-width:0}
+}

@@ -1,0 +1,77 @@
+/* Shared type and control scale. Load after module/theme styles so new modules
+   inherit the same roles instead of shrinking controls inside each layout. */
+:root{
+ --type-page:clamp(32px,3.3vw,44px);
+ --type-section:20px;--type-item:16px;--type-body:14px;--type-secondary:12px;
+ --type-control:14px;--type-compact:13px;
+ --control-height:44px;--control-compact:36px;--control-icon:32px;
+ --control-radius:10px;--control-padding:18px;
+}
+/* Primary and secondary actions share geometry; color carries emphasis. */
+:is(#workspace,dialog) .button{
+ display:inline-flex;align-items:center;justify-content:center;gap:6px;
+ min-height:var(--control-height);height:auto;padding:10px var(--control-padding);
+ border-radius:var(--control-radius);font-size:var(--type-control);font-weight:500;
+ line-height:22px;letter-spacing:0;vertical-align:middle;text-align:center;
+ white-space:nowrap;max-width:100%;flex-shrink:0;
+}
+:is(#workspace,dialog) :is(.inbox-actions,.task-actions,.prompt-card-actions,.skill-card-actions,.ai-action-buttons,.plan-bulk) .button{
+ min-height:var(--control-compact);padding:7px 12px;font-size:var(--type-compact);line-height:20px;border-radius:8px;
+}
+:is(#workspace,dialog) .text-button{
+ font-size:var(--type-compact);line-height:20px;min-height:var(--control-compact);
+ display:inline-flex;align-items:center;justify-content:center;padding:7px 0;vertical-align:middle;
+}
+:is(#workspace,dialog) :is(.task-context,.source-links,.task-document-links) .text-button{
+ min-height:28px;padding:4px 0;font-size:var(--type-secondary);line-height:20px;text-align:left;
+}
+:is(#workspace,dialog) :is(.icon-button,.module-add-icon){
+ width:var(--control-icon);min-width:var(--control-icon);height:var(--control-icon);
+ display:inline-flex;align-items:center;justify-content:center;padding:0;font-size:18px;line-height:1;border-radius:8px;
+}
+/* Headings, readable content, then quieter metadata. Brand artwork stays distinct. */
+.workspace-view #workspace{font-size:var(--type-body)}
+.workspace-view #workspace h1{font-size:var(--type-page);line-height:1.35;font-weight:500}
+.workspace-view #workspace h2{font-size:var(--type-section);line-height:1.5;font-weight:500}
+.workspace-view #workspace h3{font-size:var(--type-item);line-height:1.6;font-weight:500}
+.workspace-view #workspace :is(h2,h3) button{font-size:inherit;font-weight:inherit;line-height:inherit}
+#workspace :is(p,.inbox-copy strong,.memory-body,.task-description,.ai-bubble){font-size:var(--type-body);line-height:1.8}
+#workspace :is(.subtitle,.projects-heading p,.prompt-library-title p,.skill-heading p){font-size:var(--type-body);line-height:1.8}
+#workspace :is(.task-title,.row-title,.document-copy strong,.followup-row strong){font-size:var(--type-item);line-height:1.6;font-weight:500}
+#workspace :is(.meta,.memory-mode,.memory-result-count,.memory-live-intro,.memory-row-meta,.memory-provenance,.project-row-meta,.project-row-date,.prompt-result-count,.inbox-copy small,.document-copy small,.project-row-main p,.skill-source,.prompt-category,.module-tree-copy small,.project-task-copy small,.focus-summary>div>span){font-size:var(--type-secondary);line-height:1.7}
+#workspace :is(.tag,.count,.prompt-tags>span,.skill-labels>span){font-size:11px;line-height:1.5}
+#workspace :is(.prompt-excerpt,.skill-description){font-size:var(--type-body);line-height:1.8}
+:is(#workspace,dialog) .field{font-size:var(--type-body);line-height:1.6}
+:is(#workspace,dialog) .field :is(input,select,textarea){font-size:var(--type-body);line-height:22px;border-radius:var(--control-radius)}
+:is(#workspace,dialog) .field :is(input,select):not([type=checkbox]):not([type=radio]){min-height:var(--control-height);padding:10px 12px}
+:is(#workspace,dialog) .field textarea{padding:12px;line-height:1.8}
+dialog .dialog-head h2{font-size:24px;line-height:1.4;font-weight:500}
+dialog :is(.meta,.model-key-note,.mode-footnote){font-size:var(--type-secondary);line-height:1.7}
+#workspace :is(.prompt-search-bar,.project-search,.document-search,.memory-search,.settings-toolbar,.discovery-library-filter) input{font-size:var(--type-body);line-height:22px}
+#workspace :is(.plan-project,.project-kind-filter,.library-sort,.skill-category-filter,.document-module-filter,.memory-toolbar,.discovery-library-filter) select{font-size:var(--type-compact);min-height:var(--control-compact)}
+#workspace :is(.section-tabs,.action-tabs,.planning-switch,.project-detail-tabs,.settings-nav,.memory-sections,.prompt-categories) button{
+ font-size:var(--type-control);line-height:22px;min-height:var(--control-height);
+}
+#workspace .library-tabs button{font-size:var(--type-item);line-height:24px;min-height:var(--control-height)}
+/* Global tools use the compact size, consistently across every page. */
+.shell .topbar .top-tools>.button,.shell .top-tools .mode-switch,.shell .top-tools .assistant-link{
+ font-size:var(--type-compact);line-height:20px;min-height:var(--control-compact);padding:7px 12px;
+}
+.shell .search input{font-size:var(--type-compact);line-height:20px}
+#workspace .home-send{height:var(--control-height);min-height:var(--control-height);border-radius:var(--control-radius);padding:10px 18px}
+#workspace .home-send>span,#workspace #home-assistant-form>label{font-size:var(--type-control);line-height:22px}
+#workspace .home-create>summary,#workspace .home-create-menu button,#workspace .home-suggestions button{font-size:var(--type-compact);line-height:20px;min-height:var(--control-compact)}
+#workspace .home-day-summary{font-size:var(--type-body)}
+#workspace :is(.home-day-enter,.home-day-attention,.home-capture-destination,.home-model-note){font-size:var(--type-secondary)}
+/* Allow larger text to wrap toolbars instead of squeezing buttons. */
+#workspace :is(.page-heading,.projects-heading,.prompt-library-head,.skill-library-head,.module-documents-head,.panel-head){gap:16px;flex-wrap:wrap}
+#workspace :is(.plan-create,.module-header-actions,.document-actions,.module-documents-head>div){flex-wrap:wrap;gap:12px}
+@media(max-width:680px){
+ :root{--type-page:30px;--control-padding:16px;--control-icon:36px}
+ #workspace :is(.page-heading,.projects-heading,.prompt-library-head,.skill-library-head){align-items:flex-start}
+ #workspace .library-tabs{gap:20px;overflow-x:auto}
+ #workspace .library-tabs button{white-space:nowrap}
+ #workspace .home-send{padding-inline:12px}
+ #workspace .home-day-summary{font-size:var(--type-secondary)}
+ .shell .topbar .top-tools>.button{padding-inline:12px}
+}

@@ -1,0 +1,35 @@
+/* Shared business-page layout. Keep the home artwork independent. */
+.workspace-view{--type-page:32px}
+.workspace-view #workspace{padding-top:32px}
+.workspace-view #workspace :is(.page-heading,.projects-heading,.focus-heading,.plan-heading){
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+ gap:16px 24px;min-height:44px;margin:0 0 28px;padding:0;border:0;
+ background:none;box-shadow:none;
+}
+.workspace-view #workspace :is(.page-heading,.projects-heading,.focus-heading,.plan-heading)>div:first-child{min-width:0}
+.workspace-view #workspace :is(.page-heading,.projects-heading,.focus-heading,.plan-heading) h1{
+ margin:0;font-size:var(--type-page);line-height:1.35;font-weight:500;letter-spacing:.5px;color:var(--ink);
+}
+.workspace-view #workspace .page-context{margin:-8px 0 24px;color:var(--muted);max-width:100%;overflow-wrap:anywhere}
+.workspace-view #workspace .focus-dateline{margin:-8px 0 24px}
+.workspace-view #workspace :is(.project-back,.training-back){margin:0 0 16px}
+.workspace-view #workspace :is(.project-heading-actions,.training-actions,.focus-heading-actions){display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.workspace-view #workspace .library-shell :is(.prompt-library-title,.skill-heading) p{display:none}
+/* The list row title already opens the full prompt. Keep the compact action rail
+   to editing and copying so labels stay horizontal at every desktop width. */
+#workspace .library-list .prompt-card-actions .prompt-read{display:none}
+#workspace .library-list .prompt-card-actions{white-space:nowrap}
+.workspace-view #workspace .ai-layout{max-width:none;width:100%;margin:0;align-items:start}
+.workspace-view #workspace :is(.projects-overview,.memory-banner){background:none;border:0;border-radius:0;box-shadow:none;padding:0;margin:0 0 24px;min-height:36px}
+.workspace-view #workspace :is(.projects-overview dl,.memory-totals){display:flex;flex-wrap:wrap;gap:12px 24px;padding:0;border:0;margin:0;width:auto}
+.workspace-view #workspace :is(.projects-overview dl>div,.memory-totals>span){display:flex;align-items:baseline;gap:8px;min-width:0;flex:initial;border:0;padding:0;font-size:13px;color:var(--muted)}
+.workspace-view #workspace :is(.projects-overview dd,.memory-totals b){font-size:18px;line-height:1.5;font-weight:500;color:var(--ink);margin:0}
+.workspace-view #workspace .projects-overview dt{font-size:13px}
+.workspace-view #workspace .memory-totals b{order:1}
+@media(max-width:680px){
+ .workspace-view{--type-page:26px}
+ .workspace-view #workspace{padding-top:24px}
+ .workspace-view #workspace :is(.page-heading,.projects-heading,.focus-heading,.plan-heading){gap:12px 16px;margin-bottom:24px}
+ .workspace-view #workspace .focus-heading-actions{flex-direction:row}
+ .workspace-view #workspace :is(.page-context,.focus-dateline){margin-top:-6px;margin-bottom:20px}
+}

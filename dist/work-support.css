@@ -1,0 +1,32 @@
+.project-continue{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(220px,.75fr);gap:30px;padding:26px 28px;margin:8px 0 22px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 6%,transparent),transparent 75%)}
+.continue-main{min-width:0}.continue-main>.eyebrow{display:block;font-size:12px;letter-spacing:1px;margin-bottom:12px;color:var(--muted)}
+#workspace .continue-title{display:block;padding:0;background:none;border:0;min-height:32px;font-size:20px;font-weight:500;text-align:left;color:var(--ink);overflow-wrap:anywhere;line-height:1.6}
+#workspace .continue-title:hover{color:var(--accent)}
+#workspace .continue-main h2{font-size:18px;font-weight:500;line-height:1.6;margin:0}
+.continue-main>.meta{margin:8px 0 4px;font-size:12px}
+.continue-actions{display:flex;align-items:center;flex-wrap:wrap;gap:4px 18px;margin-top:12px}
+#workspace .continue-actions .text-button{font-size:13px;text-decoration:none}
+.continue-context{border-left:1px solid var(--line);padding-left:26px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.continue-context small{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+#workspace .continue-wait{display:block;background:none;border:0;text-align:left;padding:5px 0;color:var(--ink);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.continue-wait span{display:block;color:var(--muted);font-size:12px}
+.continue-docs{display:flex;align-items:flex-start;flex-direction:column;gap:5px}.continue-docs a,.continue-docs button{max-width:100%;overflow-wrap:anywhere;white-space:normal;text-align:left}
+.work-support-dialog{width:min(640px,calc(100vw - 32px));padding:28px;max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink)}
+.work-support-dialog::backdrop{background:#050710a6;backdrop-filter:blur(5px)}
+.work-support-dialog .dialog-head h2{font-size:22px}.work-dialog-context{font-size:16px;line-height:1.7;font-weight:500;margin:12px 0}
+.work-support-dialog .meta{font-size:13px;line-height:1.8}.work-support-dialog .field{margin-top:18px}
+.work-support-dialog textarea{min-height:90px}.work-support-dialog textarea.work-prompt-preview{min-height:290px;font-size:14px;line-height:1.85;resize:vertical}
+.work-tool-picker>summary{display:flex;gap:12px;align-items:center}.work-tool-picker>summary .meta{font-size:12px;font-weight:400}
+.work-tool-options{max-height:320px;overflow:auto;margin:12px 0}
+.work-tool-option{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.work-tool-option[hidden]{display:none}
+.work-tool-option>label{display:flex;gap:12px;align-items:center;min-width:0;flex:1;cursor:pointer}
+.work-tool-option input[type=checkbox]{flex:0 0 17px;width:17px;height:17px;min-height:17px;accent-color:var(--accent)}
+.work-tool-option strong{display:block;font-size:14px;font-weight:500;line-height:1.6;overflow-wrap:anywhere}.work-tool-option small{display:block;color:var(--muted);font-size:12px;line-height:1.8}
+.work-tool-option .text-button,.work-tool-option .button{flex-shrink:0;min-height:36px;font-size:13px;text-decoration:none}
+.work-reply-history article{padding:12px 0;border-bottom:1px solid var(--line)}.work-reply-history small{font-size:12px;color:var(--muted)}.work-reply-history p{font-size:14px;line-height:1.7;white-space:pre-wrap}
+.project-task-row>[data-work-reply],.project-task-row>[data-work-tools]{font-size:12px;white-space:nowrap}
+@media(max-width:900px){.project-continue{grid-template-columns:1fr;gap:20px}.continue-context{border-left:0;border-top:1px solid var(--line);padding:18px 0 0}.project-task-row{flex-wrap:wrap}}
+@media(max-width:600px){.project-continue{padding:20px;margin-bottom:18px}.work-support-dialog{padding:20px}#workspace .continue-title{font-size:18px}.work-support-dialog .dialog-actions{flex-wrap:wrap}.work-tool-option{gap:10px}.work-tool-option strong{font-size:13px}}
+.project-continue.is-simple{grid-template-columns:minmax(0,1fr)}.project-continue.is-simple .continue-context{display:none}.project-extra-body:has(>[data-project-memo]),.project-extra-body:has(>label.field){grid-template-columns:1fr}
+.work-tool-picker input[type=search]{width:100%;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}.work-tool-picker input[type=search]::placeholder{color:var(--muted)}

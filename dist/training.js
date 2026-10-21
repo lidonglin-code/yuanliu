@@ -1,0 +1,137 @@
+window.createTrainingWorkspace=function(api){
+  const P=window.PromptModel,M=window.TrainingModel,{esc:e,uid,toast}=api;
+  let filter='all',editing=null,promptFilter='__all',promptQuery='';
+  const get=()=>api.getState();
+  const cards=()=>get().training||[];
+  const card=id=>cards().find(c=>c.id===id);
+  const btn=(label,action,id,style='button')=>`<button class="${style}" data-training-action="${action}" data-id="${e(id||'')}">${label}</button>`;
+  const input=(name,label,value='',type='text',required=false)=>`<label class="field">${label}<input name="${name}" type="${type}" value="${e(value)}" ${required?'required':''}></label>`;
+  const area=(name,label,value='',placeholder='')=>`<label class="field">${label}<textarea name="${name}" placeholder="${e(placeholder)}">${e(value)}</textarea></label>`;
+  const select=(name,label,value,options)=>`<label class="field">${label}<select name="${name}">${options.map(([v,l])=>`<option value="${e(v)}" ${v===value?'selected':''}>${e(l)}</option>`).join('')}</select></label>`;
+  const projectName=c=>get().projects.find(p=>p.id===c.projectId)?.title||'未关联项目';
+  const date=v=>v?e(v):'日期待定';
+  const done=c=>(c.items||[]).filter(i=>M.complete(get(),i)).length;
+  function update(fn){return api.commitTraining(fn)}
+  function navigate(id=''){api.navigateTraining(id)}
+  function saved(msg){api.refreshTraining();toast(msg)}
+  function summary(c){return c.type==='demand'?c.problem||'补充业务问题，让需求更清楚。':c.type==='checklist'?`${date(c.date)} · ${e(c.mode||'形式待定')} · ${done(c)}/${(c.items||[]).length} 项已完成`:`${date(c.date)} · ${(c.items||[]).length-done(c)} 项改进待跟进`;}
+  function promptCatalog(){return window.orderLibrary(get().prompts||[],get().promptPins||[]);}
+  const hasPrompt=id=>(get().prompts||[]).some(p=>p.id===id);
+  function promptById(id){return promptCatalog().find(p=>p.id===id);}
+  const promptTone=category=>({'培训设计':'teal','项目推进':'blue','内容整理':'amber','日常效率':'violet'})[category]||'teal';
+  function promptCard(p){
+    const tone=promptTone(p.category),pinned=(get().promptPins||[]).includes(p.id);
+    return `<article class="prompt-card prompt-tone-${tone}"><div class="prompt-card-top"><span class="prompt-category"><span class="prompt-category-dot"></span>${e(p.category||'未分类')}</span><button class="prompt-pin ${pinned?'active':''}" data-training-action="pin-prompt" data-id="${e(p.id)}" aria-pressed="${pinned}" aria-label="${pinned?'取消置顶':'置顶'}：${e(p.title)}" title="${pinned?'取消置顶':'常用置顶'}">${pinned?'★':'☆'}</button><details class="prompt-menu"><summary aria-label="管理提示词：${e(p.title)}">⋯</summary><div>${p.previousVersion?btn('上一版本','version-prompt',p.id,'text-button'):''}${btn('删除','delete-prompt',p.id,'text-button')}</div></details></div><h3><button data-training-action="view-prompt" data-id="${e(p.id)}">${e(p.title)}</button></h3><p class="prompt-excerpt">${e(p.body)}</p>${promptTags(p)}<div class="prompt-card-actions">${btn('阅读全文','view-prompt',p.id,'text-button prompt-read')}${btn('编辑','edit-prompt',p.id,'text-button prompt-edit')}<button class="button prompt-copy" data-training-action="copy-prompt" data-id="${e(p.id)}" aria-label="复制提示词：${e(p.title)}"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 4V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h1" stroke="currentColor" stroke-width="1.4"/></svg>复制</button></div></article>`;
+  }
+  function promptTags(p){const tags=P.tags(p.tags);return tags.length?`<div class="prompt-tags">${tags.map(t=>`<span># ${e(t)}</span>`).join('')}</div>`:'';}
+  function promptResults(){
+    const catalog=promptCatalog(),cats=TaxonomyModel.orderedUsed(get(),'prompts'),pins=get().promptPins||[];
+    if(!['__all','__pinned',...cats.map(c=>'category:'+c)].includes(promptFilter))promptFilter='__all';
+    const searched=catalog.filter(p=>P.matches(p,promptQuery));
+    const scope=p=>promptFilter==='__all'||(promptFilter==='__pinned'?pins.includes(p.id):'category:'+(p.category||'未分类')===promptFilter);
+    const visible=searched.filter(scope),choices=[['__all','全部',searched.length],['__pinned','常用置顶',searched.filter(p=>pins.includes(p.id)).length],...cats.map(c=>['category:'+c,c,searched.filter(p=>(p.category||'未分类')===c).length])];
+    const searching=!!promptQuery.trim();
+    return `<aside class="library-sidebar"><span class="library-sidebar-label">分类浏览</span><div class="prompt-categories" aria-label="提示词分类">${choices.map(([key,label,count])=>`<button data-prompt-filter="${e(key)}" class="${key===promptFilter?'active':''}" aria-pressed="${key===promptFilter}">${e(label)} <span>${count}</span></button>`).join('')}</div></aside><div class="library-result-main"><div class="library-result-toolbar"><span class="prompt-result-count" role="status">${visible.length} 条提示词</span></div>${visible.length?`<div class="prompt-grid">${visible.map(promptCard).join('')}</div>`:`<div class="prompt-empty"><span aria-hidden="true">✧</span><h3>${searching?'没有找到匹配的提示词':promptFilter==='__pinned'?'把常用的提示词置顶在这里':'这里还没有提示词'}</h3><p>${searching?'可以换个关键词，或清除搜索与分类。':promptFilter==='__pinned'?'点击卡片右上角的星标，常用内容会优先展示。':'点击「收藏提示词」，保存好用的表达。'}</p>${btn('查看全部提示词','reset-prompts','','button soft')}</div>`}</div>`;
+  }
+  function promptLibrary(){return `<section id="prompt-library" class="prompt-library" aria-label="提示词收藏"><div class="prompt-library-head"><div class="prompt-library-title"><span class="prompt-library-emblem" aria-hidden="true">✦</span><div><h2>提示词收藏</h2><p>留住好用的表达，让下一次更轻松。</p></div></div><button class="button primary" data-training-action="new-prompt">＋ 收藏提示词</button></div><div class="prompt-search-bar"><label><span aria-hidden="true">⌕</span><input id="prompt-search" type="search" value="${e(promptQuery)}" placeholder="搜索名称、正文、分类或标签" aria-label="搜索提示词"></label><button class="text-button" data-training-action="reset-prompts">重置筛选</button></div><div id="prompt-collection-results">${promptResults()}</div></section>`;}
+  function refreshPromptResults(){const results=document.querySelector('#prompt-collection-results');if(results)results.innerHTML=promptResults();}
+  function revealSavedPrompt(p){if(!P.matches(p,promptQuery))promptQuery='';if(promptFilter==='__pinned'&&!(get().promptPins||[]).includes(p.id)||promptFilter.startsWith('category:')&&promptFilter!=='category:'+p.category)promptFilter='__all';api.refreshTraining();}
+  function openPrompt(id='',seed={}){
+    const data=id?promptById(id):seed;if(!data)return toast('提示词已移除');
+    dlg.classList.remove('prompt-reader');editing={type:'prompt',id,seed};
+
+    dlg.innerHTML=`<form id="training-form"><div class="dialog-head"><div><span class="eyebrow">PROMPT LIBRARY</span><h2 id="training-dialog-title">${id?'编辑':'收藏'}提示词</h2></div><button class="close" type="button" data-training-close aria-label="关闭提示词表单">×</button></div>${input('title','名称',data.title||'','text',true)}<div class="field-row"><label class="field">分类<select name="category">${taxonomyCategoryOptions(get(),'prompts',data.category)}</select></label>${input('tags','标签（用逗号分隔）',P.tags(data.tags).join('，'))}</div>${area('body','提示词内容',data.body||'','把你希望 AI 完成的事情、背景和输出格式写清楚。')}${id?'<p class="meta">修改后保留上一个版本，可在全文页面查看并恢复。</p>':''}<p class="error" id="training-form-error" role="alert"></p><div class="dialog-actions"><button type="button" class="button" data-training-close>取消</button><button class="button primary">${id?'保存修改':'保存收藏'}</button></div></form>`;
+    attachTaxonomyTagPicker(dlg,get());if(!dlg.open)dlg.showModal();dlg.querySelector('[name=title]').focus();
+  }
+  function savePromptForm(ev){
+    ev.preventDefault();const f=Object.fromEntries(new FormData(ev.target)),error=dlg.querySelector('#training-form-error');
+    if(!f.title?.trim()||!f.body?.trim()){error.textContent='请填写名称和提示词内容。';return;}
+    if(editing.id&&!hasPrompt(editing.id)){error.textContent='这条提示词已移除，请重新打开。';return;}
+    try{TaxonomyModel.prepare(get(),'prompts',f,editing.id);}catch(err){error.textContent=err.message;return;}
+    let value;if(!update(s=>{value=P.save(s,editing.id,{...editing.seed,...f},uid());})){error.textContent='未能保存，填写内容已保留，请重试。';return;}
+    dlg.close();revealSavedPrompt(value);toast(editing.id?'提示词已更新':'提示词已收藏');
+  }
+  function showPrompt(id){const p=promptById(id);if(!p)return toast('提示词已移除');dlg.classList.add('prompt-reader');dlg.innerHTML=`<div class="dialog-head"><div><span class="eyebrow">${e(p.category||'提示词收藏')}</span><h2 id="training-dialog-title">${e(p.title)}</h2>${promptTags(p)}</div><button class="close" type="button" data-training-close aria-label="关闭提示词">×</button></div><div class="prompt-full-text" tabindex="0" aria-label="提示词全文">${e(p.body)}</div><div class="dialog-actions prompt-detail-actions">${btn('编辑','edit-prompt',id,'button')}${p.previousVersion?btn('上一版本','version-prompt',id,'text-button'):''}${btn('复制提示词','copy-prompt',id,'button primary')}</div>`;if(!dlg.open)dlg.showModal();}
+  function showPromptVersion(id){const p=promptById(id),v=p?.previousVersion;if(!v)return toast('没有可恢复的上一版本');dlg.classList.add('prompt-reader');dlg.innerHTML=`<div class="dialog-head"><div><span class="eyebrow">上一版本 · ${e(v.category||'未分类')}</span><h2 id="training-dialog-title">${e(v.title)}</h2>${promptTags(v)}</div><button class="close" type="button" data-training-close aria-label="关闭版本预览">×</button></div><p class="meta">恢复会替换名称、分类、标签和正文；当前版本会保留为上一版本。</p><div class="prompt-full-text" tabindex="0" aria-label="上一版本全文">${e(v.body)}</div><div class="dialog-actions">${btn('返回当前版本','view-prompt',id,'button')}${btn('恢复这个版本','restore-prompt',id,'button primary')}</div>`;if(!dlg.open)dlg.showModal();}
+
+  function copyPrompt(id){const p=promptById(id);if(!p)return;const ok=()=>toast('提示词已复制到剪贴板');if(navigator.clipboard?.writeText)navigator.clipboard.writeText(p.body).then(ok).catch(()=>toast('复制失败，请手动复制'));else toast('当前浏览器不支持自动复制，请手动复制');}
+
+  function render(id=''){
+
+    if(id&&card(id))return renderDetail(card(id));
+    const visible=cards().filter(c=>filter==='archived'?c.archived:!c.archived&&(filter==='all'||c.type===filter));
+    return `<div class="page-heading"><div><h1>培训工具</h1></div></div>
+      <div class="training-start">${[['demand','01','培训需求卡','接到需求，先问清楚','业务问题 / 培训对象 / 期望改变'],['checklist','02','开班准备清单','开班之前，少漏一件事','讲师 / 名单 / 通知 / 物料'],['review','03','课后复盘卡','结束之后，留下一步','现场观察 / 学员反馈 / 改进动作']].map(([t,n,title,sub,hint])=>`<button class="training-start-card" data-training-action="new-${t}"><span class="training-number">${n}</span><span class="training-start-title">${title}<span class="entry-label" aria-hidden="true">进入</span></span><strong>${sub}</strong><small>${hint}</small></button>`).join('')}</div>
+      <div class="training-list-head"><h2>我的培训记录</h2><span class="meta">${cards().filter(c=>!c.archived).length} 条进行中的记录</span></div>
+      <div class="section-tabs">${[['all','全部'],['demand','需求'],['checklist','筹备'],['review','复盘'],['archived','已归档']].map(([k,v])=>`<button class="${filter===k?'active':''}" aria-pressed="${filter===k}" data-training-filter="${k}">${v}</button>`).join('')}</div>
+      ${visible.length?`<div class="training-records">${visible.map(c=>`<button class="panel training-record" data-training-action="open" data-id="${e(c.id)}"><div class="training-record-top"><span class="tag ${c.type==='review'?'gold':''}">${M.types[c.type]}</span><span class="meta">${c.archived?'已归档':c.type==='demand'?({draft:'待澄清',waiting:'等待反馈',ready:'已确认'})[c.stage]||'待澄清':'打开 →'}</span></div><h3>${e(c.title)}</h3><p>${c.type==='demand'?e(summary(c)):summary(c)}</p><div class="meta">${e(projectName(c))}</div>${c.type!=='demand'?`<div class="progress"><span style="width:${c.items?.length?done(c)/c.items.length*100:0}%"></span></div>`:''}</button>`).join('')}</div>`:`<section class="panel"><div class="empty"><div class="empty-icon">▣</div><h3>${filter==='archived'?'还没有归档记录':'这里从你的第一条记录开始'}</h3><p>选择上面的工具，按实际情况填写。模板只是提示，没有预填的业务记录。</p></div></section>`}`;
+  }
+  function renderDetail(c){
+    const body=c.type==='demand'?demandDetail(c):c.type==='checklist'?checklistDetail(c):reviewDetail(c);
+    const parent=get().projects.find(p=>p.id===c.projectId),module=parent?ProjectModel.taskModule(parent,{projectId:parent.id,trainingId:c.id},get().training):'';
+    const projectLink=label=>`<a class="text-button" href="${e(ProjectModel.projectHash(c.projectId,{moduleId:module}))}" data-source-project="${e(c.projectId)}" data-source-stage="${e(module)}">${label}</a>`;
+    return `<div class="training-back">${parent?projectLink('← 返回项目模块'):btn('← 培训工具','back','', 'text-button')}<span class="tag">${M.types[c.type]}</span>${c.archived?'<span class="tag gold">已归档</span>':''}</div><div class="page-heading"><div><h1>${e(c.title)}</h1><p class="subtitle">${e(projectName(c))}${parent?' · '+projectLink('打开项目模块'):''}</p></div><div class="training-actions">${btn('编辑','edit',c.id)}${btn(c.archived?'恢复':'归档',c.archived?'restore':'archive',c.id)}</div></div>${body}`;
+  }
+  function fact(k,v){return `<div class="training-fact"><dt>${k}</dt><dd>${v?e(v):'<span class="meta">待补充</span>'}</dd></div>`}
+  function demandDetail(c){return `<div class="training-detail-grid"><section class="panel"><div class="panel-head"><h2>先把需求说清楚</h2></div><dl class="training-facts">${fact('业务问题',c.problem)}${fact('培训对象',c.audience)}${fact('期望改变 / 如何观察',c.outcome)}${fact('待确认的问题',c.questions)}</dl></section><aside class="column"><section class="panel"><div class="panel-head"><h2>沟通跟进</h2></div><dl class="training-facts">${fact('提出人 / 对接人',c.contact)}${fact('期望时间',c.date)}${fact('状态',({draft:'待澄清',waiting:'等待反馈',ready:'已确认'})[c.stage])}${fact('下次跟进日期',c.followUp)}</dl><div class="panel-body">${btn(c.followTaskId?'查看跟进任务':'加入跟进待办','demand-task',c.id,'button soft')}</div></section><section class="panel"><div class="panel-head"><h2>接着推进</h2></div><div class="panel-body training-flow">${c.projectId?'<p class="meta">已关联项目，后续清单会沿用这个关联。</p>':btn('建立关联项目','make-project',c.id,'button primary')}${btn('创建开班准备清单','from-demand',c.id)}</div></section></aside></div>`}
+  function items(c){return `${(c.items||[]).some(i=>!get().tasks.some(t=>t.id===i.taskId))?`<div class="training-bulk-action">${btn('批量加入任务','bulk-tasks',c.id,'button soft')}<span class="meta">一次确认，未关联事项全部加入</span></div>`:''}<div class="training-checklist">${(c.items||[]).map(i=>{const t=get().tasks.find(t=>t.id===i.taskId),checked=M.complete(get(),i);return `<div class="training-checkrow ${checked?'is-done':''}"><label><input type="checkbox" data-training-check="${e(i.id)}" data-card="${e(c.id)}" ${checked?'checked':''}><span><strong>${e(i.title)}</strong><small>${i.due?e(i.due):'未设截止日期'}${i.owner?' · '+e(i.owner):''}</small></span></label>${btn(t?'查看待办':'加入待办','item-task',c.id+'|'+i.id,'text-button')}</div>`}).join('')||'<p class="meta">暂无动作。点击编辑后可以添加。</p>'}</div>`}
+  function checklistDetail(c){return `<div class="training-detail-grid"><section class="panel"><div class="panel-head"><h2>准备事项</h2><span class="tag">${done(c)}/${c.items.length} 已完成</span></div><div class="panel-body"><p class="meta">清单与关联待办的完成状态同步。用「编辑」调整内容、负责人和截止日期。</p>${items(c)}</div></section><aside class="column"><section class="panel"><div class="panel-head"><h2>开班安排</h2></div><dl class="training-facts">${fact('日期',c.date)}${fact('时间',c.time)}${fact('形式',c.mode)}${fact('场地 / 会议链接',c.location)}${fact('备注',c.description)}</dl><div class="panel-body training-flow">${btn(c.eventId?'更新日程':'加入日程','event',c.id,'button soft')}${btn('创建课后复盘','from-checklist',c.id)}</div></section></aside></div>`}
+  function reviewDetail(c){return `<div class="training-detail-grid"><div class="column"><section class="panel"><div class="panel-head"><h2>这次培训，留下什么</h2><span class="meta">${date(c.date)}</span></div><dl class="training-facts">${fact('现场观察',c.observations)}${fact('学员反馈',c.feedback)}${fact('问题与原因',c.issues)}${fact('可复用的方法',c.learning)}</dl></section><section class="panel"><div class="panel-head"><h2>改进动作</h2><span class="tag">${done(c)}/${c.items.length} 已完成</span></div><div class="panel-body">${items(c)}</div></section></div><aside class="panel"><div class="panel-head"><h2>复盘入口</h2></div><div class="panel-body"><p class="subtitle">把这张复盘卡放进相关文档目录，之后可以直接找到。</p><p class="meta">内容统一在这张卡片编辑，目录只保留入口，不再复制正文。</p>${btn(c.noteId?'查看复盘入口':'加入文档目录','publish-review',c.id,'button primary')}${c.noteId?`<p>${btn('打开复盘资料','open-note',c.id,'text-button')}</p>`:''}</div></aside></div>`}
+  const dlg=document.createElement('dialog');dlg.id='training-editor';dlg.setAttribute('aria-labelledby','training-dialog-title');document.body.append(dlg);
+  function itemFields(i){return `<div class="training-form-item" data-item-id="${e(i.id||uid())}"><div class="training-item-inputs"><input aria-label="事项内容" name="item-title" value="${e(i.title)}" placeholder="要做什么" required><input aria-label="截止日期" name="item-due" type="date" value="${e(i.due||'')}"><input aria-label="负责人" name="item-owner" value="${e(i.owner||'')}" placeholder="负责人（可选）"></div><button type="button" class="icon-button" data-remove-item aria-label="移除此项" ${i.taskId?'disabled title="已关联待办，请先在待办中处理"':''}>×</button></div>`}
+  function open(type,id='',seed={}){
+    dlg.classList.remove('prompt-reader');
+    const data=id?card(id):seed;editing={type,id,seed};
+    const fields=type==='demand'?area('problem','业务问题',data.problem,'业务遇到了什么问题？')+area('audience','培训对象',data.audience)+area('outcome','期望改变 / 如何观察',data.outcome)+input('contact','提出人 / 对接人',data.contact)+input('date','期望时间',data.date,'date')+area('questions','待确认的问题',data.questions)+select('stage','沟通状态',data.stage||'draft',[['draft','待澄清'],['waiting','等待反馈'],['ready','已确认']])+input('followUp','下次跟进日期',data.followUp,'date'):
+      type==='checklist'?`<div class="field-row">${input('date','开班日期',data.date,'date')}${input('time','开始时间',data.time,'time')}</div>`+select('mode','形式',data.mode||'线下',[['线下','线下'],['线上','线上'],['混合','混合']])+input('location','场地 / 会议链接',data.location)+area('description','备注',data.description):
+      input('date','培训日期',data.date,'date')+area('observations','现场观察',data.observations)+area('feedback','学员反馈',data.feedback)+area('issues','问题与原因',data.issues)+area('learning','可复用的方法',data.learning);
+    const choices=[['','暂不关联'],...get().projects.map(p=>[p.id,p.title])];
+    dlg.innerHTML=`<form id="training-form"><div class="dialog-head"><div><span class="eyebrow">TRAINING TOOLKIT</span><h2 id="training-dialog-title">${id?'编辑':'新建'}${M.types[type]}</h2></div><button class="close" type="button" data-training-close aria-label="关闭培训表单">×</button></div>${input('title','名称',data.title,'text',true)}${select('projectId','关联项目',data.projectId||'',choices)}${fields}${type!=='demand'?`<div class="training-form-items"><h3>${type==='checklist'?'准备事项':'改进动作'}</h3><p class="meta">${type==='checklist'?'默认提供常见事项，可删改后保存。':'写下具体动作；保存时可将改进动作一并加入任务。'}</p><div id="training-item-fields">${(data.items||(type==='checklist'?M.steps.map(title=>({title})):[])).map(itemFields).join('')}</div><button class="button soft" type="button" data-add-item>＋ 添加一项</button><label class="workflow-check training-save-tasks"><input type="checkbox" name="addAllTasks">保存时将所有事项加入任务（已关联的不会重复创建）</label></div>`:''}<p class="error" id="training-form-error" role="alert"></p><div class="dialog-actions"><button type="button" class="button" data-training-close>取消</button><button class="button primary">保存</button></div></form>`;
+    dlg.showModal();dlg.querySelector('[name=title]').focus();
+  }
+  function saveForm(ev){if(editing?.type==='prompt')return savePromptForm(ev);ev.preventDefault();const f=Object.fromEntries(new FormData(ev.target));const prev=editing.id?card(editing.id):{};const value={...prev,...editing.seed,...f,id:prev.id||uid(),type:editing.type,updatedAt:new Date().toISOString()};
+    const addAll=!!f.addAllTasks;delete value.addAllTasks;delete value['item-title'];delete value['item-due'];delete value['item-owner'];value.title=value.title.trim();
+    if(!value.title){dlg.querySelector('#training-form-error').textContent='请填写名称。';return}
+    if(editing.type!=='demand')value.items=[...dlg.querySelectorAll('.training-form-item')].map(row=>({...prev.items?.find(i=>i.id===row.dataset.itemId),id:row.dataset.itemId,title:row.querySelector('[name=item-title]').value.trim(),due:row.querySelector('[name=item-due]').value,owner:row.querySelector('[name=item-owner]').value.trim()}));
+    if(value.items?.some(i=>!i.title)){dlg.querySelector('#training-form-error').textContent='请填写事项内容，或移除空白项。';return}
+    if(value.eventId&&!value.date){dlg.querySelector('#training-form-error').textContent='这张清单已关联日程，请保留开班日期。';return}
+    if(!update(s=>{const at=s.training.findIndex(c=>c.id===value.id);if(at>=0)s.training[at]=value;else s.training.unshift(value);M.sync(s,value);if(addAll)M.addAllTasks(s,value,uid);})){dlg.querySelector('#training-form-error').textContent='未能保存，请检查浏览器存储空间后重试。';return}
+    dlg.close();navigate(value.id);toast(addAll?'已保存，事项已加入任务，可到行动时序安排日期':'培训记录已保存');
+  }
+  function openBulkTasks(c){
+    const pending=(c.items||[]).filter(i=>!get().tasks.some(t=>t.id===i.taskId));if(!pending.length)return toast('所有事项已关联任务');
+    let modal=document.querySelector('#training-bulk-dialog');if(!modal){modal=document.createElement('dialog');modal.id='training-bulk-dialog';modal.setAttribute('aria-labelledby','training-bulk-title');document.body.append(modal);}
+    modal.innerHTML=`<form><div class="dialog-head"><h2 id="training-bulk-title">批量加入任务</h2></div><p class="meta">将以下 ${pending.length} 项加入任务；已有任务保持不变，截止日期保留，计划日期可在行动时序安排。</p><ul>${pending.map(i=>`<li>${e(i.title)}</li>`).join('')}</ul><div class="dialog-actions"><button class="button" type="button" data-bulk-cancel>取消</button><button class="button primary">确认加入</button></div></form>`;
+    modal.querySelector('[data-bulk-cancel]').onclick=()=>modal.close();modal.querySelector('form').onsubmit=ev=>{ev.preventDefault();let count=0;if(update(s=>{count=M.addAllTasks(s,s.training.find(x=>x.id===c.id),uid);})){modal.close();saved('已加入 '+count+' 项任务');}};modal.showModal();
+  }
+  function act(action,id){const c=card(id);
+    if(action==='new-prompt')return openPrompt();
+    if(action.startsWith('new-'))return open(action.slice(4));
+    if(action==='copy-prompt')return copyPrompt(id);
+    if(action==='view-prompt')return showPrompt(id);
+    if(action==='edit-prompt')return openPrompt(id);
+    if(action==='version-prompt')return showPromptVersion(id);
+    if(action==='restore-prompt'){let value;if(update(s=>{value=P.restore(s,id);})){revealSavedPrompt(value);showPrompt(id);toast('已恢复上一版本');}return;}
+    if(action==='pin-prompt'){if(!promptById(id))return;let pinned;if(update(s=>{pinned=P.togglePin(s,id);})){refreshPromptResults();toast(pinned?'已置顶，常用提示词优先展示':'已取消置顶');}return;}
+    if(action==='reset-prompts'){promptFilter='__all';promptQuery='';const search=document.querySelector('#prompt-search');if(search)search.value='';refreshPromptResults();return;}
+    if(action==='delete-prompt'){if(hasPrompt(id)){if(update(s=>{s.prompts=(s.prompts||[]).filter(p=>p.id!==id);s.promptPins=(s.promptPins||[]).filter(x=>x!==id)}))saved('已移除提示词');}return;}
+    if(action==='open')return navigate(id);
+    if(action==='back')return navigate();
+    if(action==='bulk-tasks'){return openBulkTasks(c);}
+    if(action==='item-task'){const [cid,iid]=id.split('|'),source=card(cid),item=source?.items.find(i=>i.id===iid);if(!item)return;const existing=get().tasks.find(t=>t.id===item.taskId);if(existing)return api.editTask(existing.id);if(update(s=>{const record=s.training.find(x=>x.id===cid);M.taskFor(s,record,record.items.find(x=>x.id===iid),uid)}))saved('已加入待办');return}
+    if(!c)return;
+    if(action==='edit')return open(c.type,id);
+    if(action==='archive'||action==='restore'){if(update(s=>{s.training.find(x=>x.id===id).archived=action==='archive'}))saved(action==='archive'?'已归档，关联待办和日程仍保留':'已恢复');return}
+    if(action==='make-project'){if(!c.projectId&&update(s=>{const record=s.training.find(x=>x.id===id);const p={id:uid(),title:c.title,category:'未分类',projectMode:'training',stage:'demand',description:[c.problem,c.outcome].filter(Boolean).join('\n\n'),due:c.date||'',next:c.questions||'',status:'planning',trainingId:id};s.projects.unshift(p);record.projectId=p.id;M.sync(s,record);}))saved('已建立并关联项目');return}
+    if(action==='from-demand'||action==='from-checklist'){const nextType=action==='from-demand'?'checklist':'review',existing=cards().find(x=>x.sourceId===id&&x.type===nextType);if(existing)return navigate(existing.id);return open(nextType,'',{title:c.title,projectId:c.projectId||'',date:c.date||'',sourceId:id})}
+    if(action==='demand-task'){const exists=get().tasks.find(t=>t.id===c.followTaskId);if(exists)return api.editTask(exists.id);if(update(s=>{const record=s.training.find(x=>x.id===id);const task={id:uid(),title:'跟进培训需求：'+c.title,due:'',followUp:c.followUp||'',waitingFor:c.contact||'',status:c.stage==='waiting'?'waiting':'todo',done:false,projectId:c.projectId||'',trainingId:id};s.tasks.unshift(task);record.followTaskId=task.id}))saved('已加入跟进待办');return}
+    if(action==='event'){if(!c.date)return toast('先编辑清单，填写开班日期');if(update(s=>{const record=s.training.find(x=>x.id===id);let ev=s.events.find(x=>x.id===record.eventId);if(!ev){ev={id:uid()};s.events.unshift(ev);record.eventId=ev.id}Object.assign(ev,{title:c.title,date:c.date,time:c.time||'',kind:'培训',location:c.location||'',projectId:c.projectId||'',trainingId:id})}))saved('培训日程已保存');return}
+    if(action==='publish-review'){const existing=get().notes.find(n=>n.id===c.noteId);if(existing)return api.showMaterial(existing);if(![c.observations,c.feedback,c.issues,c.learning].some(v=>v?.trim())&&!c.items?.length)return toast('先编辑复盘，补充观察或改进动作');let note;if(update(s=>{note=M.publishReview(s,s.training.find(x=>x.id===id),uid);}))api.showMaterial(note);return}
+    if(action==='open-note'){const note=get().notes.find(n=>n.id===c.noteId);return note?api.editNote(note.id):toast('资料已移除，可重新保存复盘资料')}
+  }
+  document.addEventListener('click',ev=>{const category=ev.target.closest('[data-prompt-filter]');if(category){promptFilter=category.dataset.promptFilter;refreshPromptResults();document.querySelector('[data-prompt-filter][aria-pressed="true"]')?.focus();return;}const el=ev.target.closest('[data-training-action]');if(el){ev.preventDefault();act(el.dataset.trainingAction,el.dataset.id)}const tab=ev.target.closest('[data-training-filter]');if(tab){filter=tab.dataset.trainingFilter;api.refreshTraining()}if(ev.target.closest('[data-training-close]'))dlg.close();if(ev.target.closest('[data-add-item]'))dlg.querySelector('#training-item-fields').insertAdjacentHTML('beforeend',itemFields({title:''}));const remove=ev.target.closest('[data-remove-item]');if(remove&&!remove.disabled)remove.closest('.training-form-item').remove()});
+  document.addEventListener('input',ev=>{if(ev.target.id==='prompt-search'){promptQuery=ev.target.value;refreshPromptResults();}});
+  document.addEventListener('change',ev=>{if(ev.target.matches('[data-training-check]')){const {card:cid,trainingCheck:iid}=ev.target.dataset;const checked=ev.target.checked;if(update(s=>{const item=s.training.find(c=>c.id===cid).items.find(i=>i.id===iid);const task=s.tasks.find(t=>t.id===item.taskId);if(task)task.done=checked;else item.done=checked}))api.refreshTraining();else ev.target.checked=!checked;}});
+  dlg.addEventListener('submit',saveForm);
+  return {render,open,promptLibrary,showPrompt};
+};

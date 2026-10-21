@@ -1,0 +1,141 @@
+/* Appearance is independent of route and business data. */
+#theme-toggle{width:30px;height:30px;padding:6px;display:grid;place-items:center;flex-shrink:0;border:1px solid transparent;border-radius:50%;background:transparent;color:#a8b0cb;cursor:pointer}
+#theme-toggle:hover{background:#b69ded15;color:#e3d6ff;border-color:#aba3ce38}
+#theme-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#theme-toggle .theme-moon{display:none}
+html[data-theme=light] #theme-toggle .theme-moon{display:block}
+html[data-theme=light] #theme-toggle .theme-sun{display:none}
+
+
+html[data-theme=light]{color-scheme:light;--bg:#f6f7fb;--surface:#fff;--surface-raised:#eef0f7;--surface-deep:#f3f4f9;--nav:#eef0f7;--ink:#292e46;--muted:#657089;--line:#dfe3ed;--line-strong:#c5cadd;--accent:#665395;--gold:#7862a7;--pale:#eeebf6;--violet:#6d55a0;--violet-soft:#efeaf7;--amber:#91601e;--amber-soft:#faf0df;--danger:#b23d59;color:var(--ink)}
+html[data-theme=light] body,html[data-theme=light] body.home-experience{background:var(--bg);color:var(--ink)}
+html[data-theme=light] ::selection{background:#dcd3ee;color:#302846}
+html[data-theme=light] :is(input,textarea)::placeholder{color:#7c859b}
+html[data-theme=light] :is(button,a,input,textarea,select,summary):focus-visible{outline-color:#7a66ac}
+html[data-theme=light] :is(input,textarea,select){color:var(--ink);accent-color:#7663a7}
+html[data-theme=light] :is(h1,h2,h3,h4){color:var(--ink)}
+html[data-theme=light] .shell .topbar{background:#f6f7fbeb;border-color:#dfe3ed}
+html[data-theme=light] .shell .home-brand :is(strong,span){color:#393650;text-shadow:none}
+html[data-theme=light] .shell .home-brand small{color:#73768f}
+html[data-theme=light] :is(.workspace-nav-link,.memory-link,.breadcrumb-home,.breadcrumb,.workspace-context .breadcrumb strong){color:#657089}
+html[data-theme=light] :is(.workspace-nav-link,.memory-link,.breadcrumb-home):is(:hover,.active){color:#634c95}
+html[data-theme=light] .workspace-nav-link:after{background:linear-gradient(90deg,transparent,#8266af,transparent)}
+html[data-theme=light] .shell .top-tools .search{background:#ffffffa6;border-color:#d9ddeb;color:#657089}
+html[data-theme=light] .shell .top-tools .assistant-link{color:#665395;text-shadow:none}
+html[data-theme=light] .shell .top-tools .assistant-link:is(:hover,.active){color:#4f347e;text-shadow:none}
+html[data-theme=light] .assistant-spark{color:#7f64b5}
+html[data-theme=light] .shell .topbar .top-tools>.button{background:#ffffffa6;color:#4f5672;border-color:#cdd2e2}
+html[data-theme=light] :is(#theme-toggle,.shell .topbar #settings-link,.workspace-utilities>summary){color:#657089}
+html[data-theme=light] :is(#theme-toggle,.shell .topbar #settings-link,.workspace-utilities>summary):hover{background:#eae6f3;color:#665395}
+html[data-theme=light] .workspace-utility-panel{background:#fff;border-color:#d5daea;box-shadow:0 18px 60px #30365316}
+html[data-theme=light] :is(.workspace-utility-panel .utility,.utility-kicker){color:#58617b}
+html[data-theme=light] :is(.storage-state,.backup-status,.context-note,footer,.workspace-view footer,.home-experience footer){color:#6e7890;border-color:#dfe3ed}
+html[data-theme=light] .module-atmosphere svg{opacity:.5}
+html[data-theme=light] .module-haze{background:radial-gradient(ellipse at 82% 16%,#bcb0dd20,transparent 50%)}
+
+/* Surfaces, forms and reusable controls. */
+html[data-theme=light] :is(.panel,.ai-chat,.ai-examples,.prompt-card,.skill-card){background:#ffffffc9;border-color:var(--line);box-shadow:0 8px 30px #30365304}
+html[data-theme=light] :is(.panel-bottom,.processed-inbox,.module-sidebar){background:transparent}
+html[data-theme=light] :is(.eyebrow,.projects-kicker,.memory-eyebrow,.discovery-kicker){color:#78638e}
+html[data-theme=light] :is(.subtitle,.projects-heading p,.empty p,.empty h3,.settings-footnote,.taxonomy-count){color:var(--muted)}
+html[data-theme=light] :is(.button,.skill-open){background:#f4f2f9;border-color:#d8d3e5;color:#5e4f7a;box-shadow:none}
+html[data-theme=light] :is(.button,.skill-open):hover{background:#eae5f4;border-color:#bcb0d3}
+html[data-theme=light] :is(.button.primary,.skill-primary,.agent-library .skill-primary,.home-send){background:linear-gradient(115deg,#72629f,#536f9c);border-color:#716497;color:#fff;box-shadow:0 4px 18px #6860911c}
+html[data-theme=light] :is(.button.primary,.skill-primary,.home-send):hover{background:linear-gradient(115deg,#66518f,#48668f);color:#fff;box-shadow:0 5px 20px #6860912b}
+html[data-theme=light] .button.soft{background:#edeaf5;color:#675386;border-color:#dad3e7}
+html[data-theme=light] :is(.text-button,.library-source-link,.source-links a,.source-links button){color:#665395;text-decoration-color:#a99abc}
+html[data-theme=light] .text-button:hover{color:#49316f}
+html[data-theme=light] :is(.count,.empty-icon,.tag,.source-chip,.entry-label){background:#eeebf5;color:#66567f;border-color:#dcd5e9}
+html[data-theme=light] :is(a,button):is(:hover,:focus-visible) .entry-label{color:#523777;background:#e3dcef;border-color:#bca9d6}
+html[data-theme=light] :is(.field input,.field textarea,.field select,.capture,.ai-composer textarea,.project-search,.prompt-search-bar label,.memory-search,.memory-toolbar select,.discovery-library-filter input,.discovery-library-filter select){background:#fff;border-color:#d4daE7;color:var(--ink)}
+html[data-theme=light] :is(.field input,.field textarea,.field select,.capture):focus{border-color:#9b87bc}
+html[data-theme=light] dialog{background:linear-gradient(135deg,#fff,#f7f7fc);border-color:#d5d6e5;box-shadow:0 25px 100px #242b4a33;color:var(--ink)}
+html[data-theme=light] dialog::backdrop{background:#30364c55;backdrop-filter:blur(7px)}
+html[data-theme=light] #toast{background:#39364f;border-color:#635b7c;color:#fff;box-shadow:0 8px 32px #30365322}
+html[data-theme=light] :is(.section-tabs button,.action-tabs button,.planning-switch button,.settings-nav button,.project-detail-tabs button,.module-tree-item,.library-tabs button,.memory-sections button){color:var(--muted)}
+html[data-theme=light] :is(.section-tabs button.active,.action-tabs button.active,.planning-switch button.active,.settings-nav button.active,.project-detail-tabs button.active,.module-tree-item.selected,.library-sidebar .prompt-categories button.active,.memory-sections button.active){background:transparent;color:#604781;border-color:transparent;box-shadow:none}
+html[data-theme=light] :is(.taxonomy-table-heading,.project-directory-head,.module-content-head,.ai-chat-head){background:#f0f1f8;color:#63708a;border-color:var(--line)}
+html[data-theme=light] :is(.taxonomy-row,.project-directory-row,.project-task-row,.related-document-row,.project-summary-strip,.project-detail-tabs,.inbox-detail-row){border-color:var(--line)}
+html[data-theme=light] :is(.taxonomy-row,.project-directory-row):hover{background:#f0edf8}
+html[data-theme=light] .taxonomy-state{background:#e7f2ec;color:#37715c}
+html[data-theme=light] .taxonomy-state.is-inactive{background:#eeedf2;color:#767386}
+html[data-theme=light] :is(.taxonomy-order button,.project-row-symbol){background:#f0eef7;color:#6f5c92;border-color:#d9d1e5}
+html[data-theme=light] .projects-overview{background:linear-gradient(110deg,#ece8f54d,#f0f3f74d);border-color:var(--line)}
+html[data-theme=light] :is(.projects-overview-intro strong,.project-row-main h3){color:var(--ink)}
+html[data-theme=light] :is(.projects-overview dd,.projects-overview-mark){color:#786294}
+html[data-theme=light] .project-progress-track{background:#e5e5f0}
+html[data-theme=light] .project-progress-track i{background:linear-gradient(90deg,#8870b3,#729ac0)}
+html[data-theme=light] .project-state.is-doing{background:#e6f0fa;color:#376990}
+html[data-theme=light] .project-state.is-blocked{background:#f9eadb;color:#97602f}
+
+/* Collections, planning and assistant. */
+html[data-theme=light] :is(.prompt-library-head,.skill-library-head,.agent-library .skill-library-head){background:transparent;border-color:var(--line)}
+html[data-theme=light] :is(.prompt-card,.skill-card):hover{background:#fff;border-color:#bfb2d8;box-shadow:0 8px 25px #5b477e0b}
+html[data-theme=light] :is(.prompt-card h3 button,.skill-card h3,.agent-library .skill-card h3){color:var(--ink)}
+html[data-theme=light] .library-tabs button[aria-selected=true]{color:#664787;background:transparent;font-weight:600;box-shadow:inset 0 -2px #a18abf}
+html[data-theme=light] .library-view-toggle button[aria-pressed=true]{color:#664787;background:#fff;box-shadow:0 1px 4px #34304d0a}
+html[data-theme=light] .library-tabs button span{color:#7e748d;background:transparent;font-weight:400}
+html[data-theme=light] .library-view-toggle{background:#f4f2f8;border-color:var(--line)}
+html[data-theme=light] .library-sidebar-label{color:#6e7890}
+html[data-theme=light] .skill-empty{background:linear-gradient(130deg,#faf8ff,#f6f8fb);border-color:#d6cfe5}
+html[data-theme=light] :is(.planning-backlog,.week-column,.month-cell){background:#ffffffb3;border-color:var(--line)}
+html[data-theme=light] :is(.week-column.selected,.month-cell.selected,.day.active){background:#eee9f7;box-shadow:inset 0 2px #927cb8;border-color:#c9bbdc;color:#5d447f}
+html[data-theme=light] .month-cell.outside{background:#eef0f5}
+html[data-theme=light] :is(.day.active b,.is-today .month-date b){color:#604781}
+html[data-theme=light] .week-task{background:#f6f8fc;border-color:#dce1ed}
+html[data-theme=light] .month-entry{background:#e9eff8;color:#456587}
+html[data-theme=light] :is(.week-event,.month-entry.event-entry){background:#eee7f7;color:#785294;border-color:#d9cbe6}
+html[data-theme=light] :is(.month-entry.follow-entry,.week-task.is-waiting){background:#faf0df;color:#936621;border-color:#e5d3af}
+html[data-theme=light] :is(.ai-orb,.ai-avatar){background:radial-gradient(circle at 20% 10%,#e1d6f2,#a59ac2);color:#524773;border-color:#c3b3da}
+html[data-theme=light] .ai-bubble{background:#f2f4fa;border-color:var(--line);color:var(--ink)}
+html[data-theme=light] .ai-message.user .ai-bubble{background:linear-gradient(120deg,#eee7f6,#e9eff8);border-color:#d8cce5}
+html[data-theme=light] .ai-composer{background:#f5f6fb;border-color:var(--line)}
+html[data-theme=light] .ai-action{background:#ebe7f6;color:#665395;border-color:#d8d0e8}
+html[data-theme=light] :is(.ai-compose-foot span,.settings-nav small){color:var(--muted)}
+
+/* The same home composition, with ink-like filaments on a pearl surface. */
+html[data-theme=light] .home-atmosphere:after{background:linear-gradient(90deg,#f6f7fbaa,transparent 50%),linear-gradient(0deg,#f6f7fb,transparent 22%)}
+html[data-theme=light] .home-nebula{background:radial-gradient(ellipse at 73% 32%,#bcb4e535,transparent 45%),radial-gradient(ellipse at 66% 62%,#a9bfda25,transparent 46%)}
+html[data-theme=light] .home-grain{background-image:radial-gradient(#73739a35 .6px,transparent .6px)}
+html[data-theme=light] .home-statusline{color:#657089;border-color:var(--line)}
+html[data-theme=light] :is(#home-motion,.home-overline,.home-intro p,.home-orbit-caption>small,.home-model-note,.home-composer-foot,.home-scroll){color:#68718a}
+html[data-theme=light] .home-intro h1{color:#30344c;text-shadow:none}
+html[data-theme=light] .home-intro h1 em{background:linear-gradient(100deg,#78629d,#5276a3 70%,#4f859a);background-clip:text;-webkit-background-clip:text;color:transparent}
+html[data-theme=light] .home-orbit-caption>span{color:#656080;text-shadow:none}
+html[data-theme=light] #home-assistant-form{background:linear-gradient(125deg,#ffffffb8,#f6f4fcce);border-color:#d3cbe2;box-shadow:0 12px 45px #5c52750a}
+html[data-theme=light] #home-assistant-form:focus-within{border-color:#9b87bb;box-shadow:0 0 0 3px #a696c218}
+html[data-theme=light] #home-assistant-form>label,html[data-theme=light] #home-assistant-form>label>span{color:#79628f}
+html[data-theme=light] #home-assistant-input{color:#36364e}
+html[data-theme=light] #home-assistant-input::placeholder{color:#788098}
+html[data-theme=light] .home-suggestions button{color:#6e6784}
+html[data-theme=light] .home-portals{background:linear-gradient(90deg,#edeaf740,#e9eef540);border-color:#dadde9}
+html[data-theme=light] .home-portals>a:hover{background:#eae6f580}
+html[data-theme=light] .portal-symbol{color:#847299}
+html[data-theme=light] .portal-copy strong{color:#373950}
+html[data-theme=light] .portal-copy small{color:#6e7890}
+html[data-theme=light] :is(.home-daily-heading h2,.home-preview-row,.home-preview h3,.focus-summary strong){color:#363950}
+html[data-theme=light] :is(.home-preview-row time,.focus-summary>div>span,.focus-inbox-link,.focus-inbox-link small){color:#68718a}
+
+/* Reading and personal context. */
+html[data-theme=light] :is(.discovery-card,.memory-banner){background:radial-gradient(ellipse at 100% 10%,#c5b5e61c,transparent 65%),linear-gradient(115deg,#fff,#f6f4fb);border-color:#dbd5e6}
+html[data-theme=light] :is(.discovery-label h2,.discovery-main h3,.discovery-reader h2,.discovery-prose h3,.discovery-title-button,.discovery-empty h3,.discovery-library-head h2,.memory-banner h2,.memory-row h3,.memory-empty h3,.memory-totals b){color:#36354d}
+html[data-theme=light] :is(.discovery-label p,.discovery-main>p,.discovery-reader-lead,.discovery-prose,.discovery-row p,.discovery-library-head p,.discovery-empty p,.memory-banner p,.memory-body,.memory-consent){color:#5c657c}
+html[data-theme=light] :is(.discovery-label a,.discovery-meta>span:first-child,.discovery-reader-meta,.discovery-source a,.discovery-thought summary,.memory-provenance a,.discovery-question span){color:#79618e}
+html[data-theme=light] :is(.discovery-meta,.discovery-footnote,.discovery-source,.discovery-source small,.discovery-reader-tools span,.discovery-thought label,.discovery-history-note,.memory-mode,.memory-totals span,.memory-toolbar>label,.memory-sections button span,.memory-sections p,.memory-result-count,.memory-live-intro,.memory-row-meta,.memory-provenance,.memory-row-foot>span){color:#6a748b}
+html[data-theme=light] .memory-search input{color:var(--ink)}
+html[data-theme=light] :is(.memory-empty,.discovery-empty){background:#ffffff60;border-color:#d7d1e4}
+html[data-theme=light] .memory-status.status-confirmed{color:#3e7b6b}
+html[data-theme=light] .memory-status.status-pending{color:#946b2c}
+html[data-theme=light] .memory-assistant-entry{color:#5c467b}
+html[data-theme=light] .memory-assistant-entry span{color:#6a748b}
+html[data-theme=light] .shell .workspace-nav-link.active,html[data-theme=light] .shell .memory-link.active{color:#604781}
+html[data-theme=light] .prompt-category{background:#ece8f5;color:#685184}
+html[data-theme=light] .is-training .project-row-symbol{background:#eee8f6;color:#7a5c9c;border-color:#d8cce5}
+html[data-theme=light] .discovery-library-filter :is(input,select){border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px}
+html[data-theme=light] .project-summary-strip{color:#657089}
+html[data-theme=light] .agent-library .skill-card-actions .skill-open{background:#edeaf5;border-color:#d8d3e5;color:#665395}
+
+/* Light-mode navigation uses an ink accent, not a filled selection tile. */
+html[data-theme=light] :is(.library-tabs button,.section-tabs button,.action-tabs button,.planning-switch button,.project-detail-tabs button):hover{background:transparent;color:#634984}
+html[data-theme=light] :is(.section-tabs button.active,.action-tabs button.active,.planning-switch button.active,.project-detail-tabs button.active){background:transparent;border-color:transparent;border-radius:0;color:#664787;font-weight:600;box-shadow:inset 0 -2px #a18abf}
+html[data-theme=light] :is(.settings-nav button.active,.module-tree-item.selected,.library-sidebar .prompt-categories button.active,.memory-sections button.active){background:transparent;border-radius:0;color:#664787;font-weight:600;box-shadow:inset 2px 0 #a18abf}

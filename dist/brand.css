@@ -1,0 +1,29 @@
+:root{
+  --font-brand:"Hiragino Sans GB","STHeiti","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-display:"Songti SC","STSong","Source Han Serif SC","Noto Serif CJK SC",serif;
+  --font-ui:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  --brand-champagne:#c6a970;
+  --brand-champagne-light:#9a7340;
+  --brand-lockup-image:url("./assets/yuanliu-lockup-dark.svg?v=cohesive-type-11b");
+}
+body,button,input,textarea,select{font-family:var(--font-ui)}
+.shell .home-brand{display:flex;align-items:center;gap:0;min-width:max-content}
+.shell .home-brand .brand-lockup{
+  display:block;
+  width:126px;
+  height:48px;
+  flex:0 0 126px;
+  background:var(--brand-lockup-image) left center/contain no-repeat;
+  filter:drop-shadow(0 0 0 transparent);
+}
+.home-brand:is(:hover,:focus-visible) .brand-lockup{filter:drop-shadow(0 0 8px #c6a9702e)}
+.home-refined .home-intro h1{font-family:var(--font-display)}
+.workspace-view #workspace h1{font-family:var(--font-ui);font-weight:500;letter-spacing:.5px}
+html[data-theme=light]{--brand-lockup-image:url("./assets/yuanliu-lockup-light.svg?v=cohesive-type-11b")}
+@media(max-width:1300px){
+  .shell .home-brand .brand-lockup{width:116px;height:44px;flex-basis:116px}
+}
+@media(max-width:680px){
+  .shell .home-brand .brand-lockup{width:108px;height:41px;flex-basis:108px}
+}
+@media(prefers-reduced-motion:no-preference){.home-brand .brand-lockup{transition:filter .25s ease}}

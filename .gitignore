@@ -1,0 +1,37 @@
+# Local operating-system files
+.DS_Store
+._*
+Thumbs.db
+
+# Personal backups, runtime output and local hosting configuration
+/backups/
+/runtime/
+/.openai/
+/handoff/
+/AGENTS.md
+
+# Private product presentations and historical screenshots stay on this computer
+/dist/contact/
+/dist/introduce/
+/dist/brand-studio/
+/dist/brand-guide.html
+/docs/screenshots/
+/scripts/capture-introduce-*.js
+
+# Local release exports
+/release-artifacts/
+
+# Credentials and local environment overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated caches and development dependencies
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+coverage/
+*.log

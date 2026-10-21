@@ -1,0 +1,122 @@
+/* Planning is a single working surface, with secondary controls revealed on demand. */
+.planning-experience .workspace-context{display:none}
+.planning-experience .module-atmosphere svg{opacity:.14}
+.planning-experience #workspace{padding-top:38px}
+.plan-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:30px}
+#workspace .plan-heading h1{font-size:32px;letter-spacing:1px;margin:0 0 12px}
+.plan-heading p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+.planning-experience .plan-viewbar{padding:0 0 12px;margin:0 0 26px;border-bottom:1px solid var(--line);gap:20px}
+.planning-experience .planning-switch{flex:initial;gap:24px;background:none;border:0;padding:0;box-shadow:none}
+#workspace .planning-switch>button{min-width:56px;padding:10px 4px;background:none;border:0;border-radius:0;font-size:18px;color:var(--muted);position:relative}
+#workspace .planning-switch>button.active{color:var(--ink);background:none;box-shadow:none}
+#workspace .planning-switch>button.active:after{content:'';height:2px;background:var(--accent);position:absolute;bottom:-13px;left:4px;right:4px}
+.plan-view-tools{display:flex;align-items:center;gap:24px;margin-left:auto;min-width:0}
+.plan-followup{font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.plan-followup:hover{color:var(--accent)}
+#workspace .plan-view-tools select,#workspace .plan-list-toolbar select{min-height:36px;height:36px;max-width:230px;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--muted);font-size:13px;padding:0 28px 0 12px}
+/* Inherit the shared workspace width; only the ledger's internal layout differs. */
+.plan-ledger{width:100%;margin:0;border:1px solid var(--line);border-radius:20px;background:linear-gradient(115deg,color-mix(in srgb,var(--accent) 4%,var(--surface)),color-mix(in srgb,var(--surface) 70%,transparent) 65%);box-shadow:0 20px 60px #0000000c;isolation:isolate}
+.plan-list-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:72px;padding:16px 24px;border-bottom:1px solid var(--line);margin:0}
+.plan-list-count{font-size:14px;color:var(--ink);display:flex;align-items:center;gap:10px;letter-spacing:.3px}
+.plan-list-count:before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px color-mix(in srgb,var(--accent) 35%,transparent)}
+.plan-list-toolbar>div{display:flex;align-items:center;gap:14px}
+#workspace .plan-list-toolbar .text-button{text-decoration:none;font-size:13px;min-width:42px}
+.plan-ledger .plan-group{display:grid;grid-template-columns:162px minmax(0,1fr);margin:0;padding:22px 24px;gap:24px;border-bottom:1px solid var(--line)}
+.plan-ledger .plan-group:last-child{border-bottom:0}
+.plan-group-label{padding:13px 0}
+#workspace .plan-group-label h2{display:flex;gap:10px;align-items:center;font-size:16px;font-weight:550;letter-spacing:.3px;margin:0;padding:0;border:0;white-space:nowrap}
+.plan-group-label h2>i{width:7px;height:7px;flex-shrink:0;border:1px solid #b6acd7;border-radius:2px;background:#b6acd71a}
+[data-plan-group=scheduled] .plan-group-label h2>i{border-radius:50%;border-color:#86abb9;background:#86abb91c}
+[data-plan-group=waiting] .plan-group-label h2>i{border-radius:50%;border-color:#c7b78f;background:#c7b78f1c}
+.plan-group-label h2>span{margin-left:auto;padding:1px 7px;border-radius:6px;background:color-mix(in srgb,var(--accent) 7%,transparent);color:var(--muted);font-size:12px;font-weight:400;font-variant-numeric:tabular-nums}
+.plan-group-label>p{margin:9px 0 0 17px;color:var(--muted);font-size:11px;line-height:1.8;opacity:.8}
+.plan-group-rows{min-width:0;border-left:1px solid var(--line);padding-left:22px}
+.plan-task-row{display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);position:relative;min-width:0}
+.plan-ledger .plan-task-row{padding:13px 12px;margin:0 -12px;border-bottom-color:color-mix(in srgb,var(--line) 65%,transparent);min-height:66px;border-radius:9px;transition:background .15s ease}
+.plan-ledger .plan-task-row:last-child{border-bottom-color:transparent}
+.plan-ledger .plan-task-row:hover,.plan-ledger .plan-task-row:focus-within{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.plan-ledger .plan-task-row:has(.focus-menu[open]){z-index:15}
+.plan-task-row>input{appearance:none;flex-shrink:0;width:18px;height:18px;border:1px solid #9aa5c470;border-radius:6px;background:transparent;cursor:pointer;display:grid;place-items:center;margin:0}
+.plan-task-row>input:checked{background:#b9aed530;border-color:#b9aed5}
+.plan-task-row>input:checked:after{content:'✓';font-size:12px;color:var(--accent)}
+.plan-task-copy{flex:1;min-width:0}
+#workspace .plan-task-copy .task-title{padding:0;background:none;min-height:28px;font-weight:450;text-align:left;font-size:16px;color:var(--ink);overflow-wrap:anywhere;border:0}
+#workspace .plan-task-copy .task-title:hover{color:var(--accent)}
+.plan-task-meta{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;color:var(--muted);font-size:12px;line-height:1.8}
+.plan-task-meta:empty{display:none}
+#workspace .plan-task-meta>button{font-size:12px;padding:0;min-height:28px;background:none;border:0;color:var(--muted);text-align:left;white-space:normal}
+#workspace .plan-task-meta>button:hover{color:var(--accent)}
+.plan-task-meta .plan-overdue{color:#e09b92}
+.plan-task-meta .plan-due{color:#c7b994}
+#workspace .plan-task-date{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 70%,transparent);color:var(--muted);font-size:13px;white-space:nowrap;border-radius:8px;min-height:36px;padding:6px 10px}
+#workspace .plan-task-date:hover{border-color:var(--line);color:var(--accent);background:var(--surface)}
+#workspace .plan-task-date.unset{color:var(--accent);border-style:dashed;border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+.plan-task-date svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.1;opacity:.7;flex-shrink:0}
+.plan-task-date span{font-variant-numeric:tabular-nums}
+#workspace .plan-ledger .plan-task-meta>button{min-height:23px}
+#workspace .plan-ledger .plan-task-copy .task-title{font-size:16px;min-height:26px}
+.plan-done-label{font-size:12px;color:var(--muted)}
+.plan-task-row.is-done .task-title{text-decoration:line-through;opacity:.6}
+.plan-completed{margin:0;padding:0 24px;border-top:0}.plan-completed[open]{padding-bottom:14px}
+.plan-completed>summary{list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer;min-height:56px;font-size:14px;color:var(--muted)}
+.plan-completed>summary::-webkit-details-marker{display:none}
+.plan-completed>summary>span{font-size:12px}
+.plan-completed>summary>i{margin-left:auto;font-style:normal;transition:transform .2s}
+.plan-completed[open]>summary>i{transform:rotate(180deg)}
+.planning-experience .plan-bulk{margin:16px 24px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px}
+.plan-empty{padding:64px 20px;text-align:center;color:var(--muted)}
+#workspace .plan-empty h2{font-size:18px;font-weight:500;color:var(--ink)}
+.plan-empty p{font-size:14px;line-height:1.8}
+/* Calendar takes the full width until the user opens the scheduling tray. */
+.planning-experience .week-toolbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.planning-experience .week-heading{margin-right:auto}
+#workspace .week-heading h2{font-size:21px;margin:0 0 7px;letter-spacing:0}
+.planning-experience .week-heading p{font-size:12px;margin:0;color:var(--muted)}
+.calendar-options{display:flex;align-items:center;gap:12px}
+#workspace .calendar-options>.button{min-height:36px;font-size:13px;padding:6px 12px;border-color:var(--line);background:transparent;color:var(--muted)}
+.calendar-scale{display:flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px}
+#workspace .calendar-scale>button{font-size:13px;min-width:36px;min-height:30px;padding:3px 8px;background:none;border:0;border-radius:6px;color:var(--muted)}
+#workspace .calendar-scale>button.active{color:var(--ink);background:var(--surface);box-shadow:0 1px 6px #00000010}
+.planning-experience .date-controls{gap:6px}
+#workspace .date-controls button,#workspace .date-controls input{min-height:36px;height:36px;font-size:13px}
+.planning-experience .week-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
+.planning-experience .week-workspace.has-backlog{grid-template-columns:240px minmax(0,1fr)}
+.planning-experience .week-board,.planning-experience .month-board{box-shadow:none;border:1px solid var(--line);background:transparent;overflow:hidden;border-radius:16px}
+.planning-experience .week-legend{font-size:12px;padding:16px 20px;background:transparent;border-bottom:1px solid var(--line)}
+.planning-experience .week-legend>.meta{margin-left:auto;font-size:12px}
+.planning-experience .week-columns{min-height:420px}
+.planning-experience .week-column{background:transparent}
+.planning-experience .week-column.selected{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.planning-experience .week-date{padding-top:18px;padding-bottom:18px}
+.planning-experience .week-date>b{font-size:26px;font-weight:450}
+.planning-experience .week-date>small{display:none}
+.planning-experience .day-clear{font-size:12px;opacity:.45;margin-top:35px}
+.planning-experience .week-add{opacity:.65;font-size:12px}
+.planning-experience .week-add:hover{opacity:1}
+.planning-experience .backlog-head{display:flex;align-items:center;justify-content:space-between}
+.planning-experience .planning-backlog{background:var(--surface);border:1px solid var(--line);box-shadow:none}
+.planning-experience .day-detail{margin-top:24px;border:1px solid var(--line);box-shadow:none;background:transparent;border-radius:16px;overflow:visible}
+.planning-experience .day-detail-body{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+.planning-experience .day-detail .plan-task-row{gap:10px;flex-wrap:wrap}
+.planning-experience .day-detail .plan-task-copy{flex-basis:55%}
+.planning-experience .day-detail .plan-task-date{margin-left:28px}
+.planning-experience .day-detail .focus-menu{margin-left:auto}
+.planning-experience .month-footer{font-size:12px;color:var(--muted);padding-top:12px}
+html[data-theme="light"] .plan-task-meta .plan-overdue{color:#a35250}
+html[data-theme="light"] .plan-task-meta .plan-due{color:#8b7144}
+html[data-theme="light"] .planning-experience .week-column.selected{background:#82719b06}
+@media(max-width:1100px){.planning-experience .week-workspace.has-backlog{grid-template-columns:210px minmax(0,1fr)}.planning-experience .week-toolbar{gap:14px}.planning-experience .date-controls{margin-left:auto}.planning-experience .day-detail-body{grid-template-columns:1fr}}
+@media(max-width:700px){.planning-experience #workspace{padding-top:24px}.plan-heading{gap:16px;margin-bottom:24px}#workspace .plan-heading h1{font-size:28px}.plan-heading p{font-size:12px;max-width:220px}.planning-experience .plan-viewbar{flex-wrap:wrap;gap:18px}.plan-view-tools{gap:14px}#workspace .plan-view-tools select{max-width:145px}.plan-followup{font-size:12px}#workspace .planning-switch>button{font-size:16px;min-width:38px}.planning-experience .planning-switch{gap:16px}.plan-task-row{gap:10px;padding:17px 0;flex-wrap:wrap}.plan-task-copy{flex-basis:calc(100% - 62px)}#workspace .plan-task-copy .task-title{font-size:15px}.plan-task-row>.focus-menu{position:absolute;right:0;top:13px}.plan-task-copy{padding-right:30px}#workspace .plan-task-date{margin-left:28px;min-height:32px;font-size:12px;padding:3px 8px}.plan-done-label{display:none}.planning-experience .week-workspace.has-backlog{grid-template-columns:minmax(0,1fr)}.planning-experience .backlog-items{max-height:220px}.planning-experience .week-heading{flex:1;min-width:180px}#workspace .week-heading h2{font-size:18px}.planning-experience .date-controls{margin-left:0;width:100%}.planning-experience .date-controls input{flex:1;min-width:0}.planning-experience .week-legend{padding:12px;gap:12px;flex-wrap:wrap}.planning-experience .week-legend>.meta{display:none}.calendar-options{gap:8px}.planning-experience .week-columns{min-height:360px}.planning-experience .day-detail .panel-head{gap:12px;flex-wrap:wrap}.planning-experience .day-detail .plan-task-date{margin-left:28px}.planning-experience .day-detail .focus-menu{margin-left:0}.plan-bulk{flex-wrap:wrap}.plan-list-toolbar{margin-top:6px}.plan-group{margin-top:22px}}
+@media(prefers-reduced-motion:reduce){.plan-completed>summary>i{transition:none}}
+
+/* Keep the ledger compact on tablets and turn section rails into headers on phones. */
+html[data-theme="light"] .plan-ledger{background:linear-gradient(125deg,#ffffffed,#faf9fdc9);box-shadow:0 12px 36px #3d345c05;border-color:#dfe1ec}
+html[data-theme="light"] .plan-ledger .plan-task-row:hover{background:#72639506}
+html[data-theme="light"] .plan-group-rows{border-color:#e6e7ef}
+@media(max-width:1000px){.plan-ledger .plan-group{grid-template-columns:130px minmax(0,1fr);gap:20px;padding:18px 20px}.plan-group-rows{padding-left:18px}.plan-group-label>p{margin-left:0;font-size:11px}.plan-list-toolbar{padding:14px 20px}}
+@media(max-width:700px){.plan-ledger{border-radius:16px}.plan-ledger .plan-group{display:block;padding:16px}.plan-group-label{padding:0 0 12px}.plan-group-label>p{display:none}#workspace .plan-group-label h2{font-size:14px;justify-content:flex-start}.plan-group-label h2>span{margin-left:2px}.plan-group-rows{border:0;padding:0}.plan-list-toolbar{padding:12px 16px;min-height:64px;gap:10px}.plan-list-count{font-size:12px;gap:7px}.plan-list-toolbar>div{gap:4px}#workspace .plan-list-toolbar select{max-width:118px;padding-left:8px;font-size:12px}.plan-ledger .plan-task-row{margin:0;padding:13px 0;gap:6px 10px;align-items:center}.plan-ledger .plan-task-copy{flex-basis:calc(100% - 62px);padding-right:28px}.plan-ledger .plan-task-row>.focus-menu{right:-5px;top:10px}#workspace .plan-ledger .plan-task-date{margin-left:28px;min-height:34px;font-size:12px;padding:4px 8px}.plan-completed{padding:0 16px}.plan-ledger .plan-bulk{margin:12px 16px}.plan-ledger .plan-task-row>input{width:17px;height:17px}.plan-ledger .plan-task-row:hover{background:none}}
+@media(prefers-reduced-motion:reduce){.plan-ledger .plan-task-row{transition:none}}
+
+.plan-completed-rows{padding-left:208px}
+@media(max-width:1000px){.plan-completed-rows{padding-left:164px}}
+@media(max-width:700px){.plan-completed-rows{padding-left:0}.plan-list-toolbar{flex-wrap:wrap}.plan-list-toolbar>div{margin-left:auto}#workspace .plan-ledger .plan-task-copy .task-title{font-size:15px}}

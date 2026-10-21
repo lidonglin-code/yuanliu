@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d17">
+  <meta name="description" content="你的个人工作台：安排日程、推进项目、沉淀知识。">
+  <title>源流 · 我的工作空间</title>
+  <script src="./theme.js?v=20260928-topbar-v1"></script>
+  <link rel="icon" href="./assets/yuanliu-favicon.svg?v=cohesive-type-11b">
+  <link rel="stylesheet" href="./style.css?v=20260925-link-affordances-v1">
+  <link rel="stylesheet" href="./future.css?v=20260924-immersive-v2">
+  <link rel="stylesheet" href="./home.css?v=20261004-refined-v1">
+  <link rel="stylesheet" href="./workspace.css?v=20261005-neutral-inbox-v2">
+  <link rel="stylesheet" href="./discovery.css?v=20260925-discovery-v2">
+  <link rel="stylesheet" href="./memory.css?v=20260924-memory-v2">
+  <link rel="stylesheet" href="./theme.css?v=20261005-neutral-inbox-v2">
+  <link rel="stylesheet" href="./topbar.css?v=20260928-nav-type-v1">
+  <link rel="stylesheet" href="./home-gold.css?v=20260928-gold-v1">
+  <link rel="stylesheet" href="./intelligence.css?v=20261021-byok-v1">
+  <link rel="stylesheet" href="./home-refined.css?v=20261005-quiet-luxury-v3">
+  <link rel="stylesheet" href="./ui-scale.css?v=20261004-v1">
+  <link rel="stylesheet" href="./focus.css?v=20261005-planning-v1">
+  <link rel="stylesheet" href="./planning-refined.css?v=20261005-wide-v5">
+  <link rel="stylesheet" href="./work-support.css?v=20261005-v2">
+  <link rel="stylesheet" href="./workspace-layout.css?v=20261008-library-actions-v2">
+  <link rel="stylesheet" href="./brand.css?v=20261005-cohesive-type-11b">
+  <script src="./topbar.js?v=20260928-topbar-v1" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">跳到工作区</a>
+  <div class="shell">
+    <div class="main-shell">
+      <header class="topbar">
+        <a class="home-brand" href="#today" aria-label="源流纵览"><span class="brand-lockup" aria-hidden="true"></span></a>
+        <nav id="navigation" class="workspace-nav" aria-label="主导航"></nav>
+        <div class="top-tools">
+          <label class="search"><span id="search-icon"></span><input id="search" type="search" placeholder="搜索工作台" aria-label="搜索工作内容、资料和提示词"></label>
+          <button type="button" id="mode-switch" class="mode-switch" aria-haspopup="dialog"><i></i>标准模式</button><div class="ai-tools"><button class="assistant-link" data-view="assistant"><span class="assistant-spark" aria-hidden="true">✦</span> AI 助理</button><details id="ai-tools-menu" class="ai-tools-menu"><summary aria-label="AI 助理相关功能" title="AI 助理相关功能"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></summary><div class="ai-tools-panel"><a id="memory-link" class="memory-link" href="#memory"><strong>工作记忆</strong><small>管理助理需要了解的工作背景</small></a></div></details></div>
+          <button class="button primary" data-quick-capture aria-haspopup="dialog" aria-controls="quick-capture-dialog" title="随手记录到「灵感拾萃」">＋ 快速记录</button>
+          <details class="workspace-utilities" id="workspace-utilities"><summary aria-label="更多选项" title="更多选项">⋯</summary><div class="workspace-utility-panel"><span class="utility-kicker">工作台偏好</span><button id="theme-toggle" type="button" aria-label="切换为浅色主题" title="切换为浅色主题" aria-pressed="false"><svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.6 8.6 0 0 1 8.8 4 8.6 8.6 0 1 0 20 15.2Z"/></svg><span data-theme-label>切换为浅色主题</span></button><a class="utility" href="#memory">工作记忆</a><a class="utility" href="#assistant">助理记录</a><button class="utility" data-open-model>模型连接</button><button class="utility" data-open-mode>工作模式</button><a id="settings-link" class="utility" href="#settings">工作台设置</a><div class="utility-divider"></div><span class="utility-kicker">数据与备份</span><button class="utility" id="export">导出备份</button><button class="utility" id="import">恢复备份</button><input id="import-file" type="file" accept="application/json,.json" hidden><div class="backup-status" id="backup-status"></div><div class="storage-state" id="storage-state">内容仅保存在当前浏览器</div></div></details>
+        </div>
+      </header>
+      <main id="workspace" tabindex="-1"></main>
+      <footer>源流 <span>·</span> 思有所流，行有所序。</footer>
+    </div>
+  </div>
+  <dialog id="editor" aria-labelledby="dialog-title"><form id="editor-form"><div class="dialog-head"><div><span class="eyebrow">MY WORKSPACE</span><h2 id="dialog-title"></h2></div><button class="close" type="button" id="close-dialog" aria-label="关闭">×</button></div><div id="form-fields"></div><p id="form-error" class="error" role="alert"></p><div class="dialog-actions"><button class="button" type="button" id="cancel-dialog">取消</button><button class="button primary" type="submit">保存</button></div></form></dialog>
+  <dialog id="quick-capture-dialog" aria-labelledby="quick-capture-title" aria-describedby="quick-capture-help">
+    <form id="quick-capture-form">
+      <div class="dialog-head"><div><span class="eyebrow">灵感拾萃</span><h2 id="quick-capture-title">先收下来，稍后整理。</h2></div><button class="close" type="button" id="close-quick-capture" aria-label="关闭快速记录">×</button></div>
+      <p class="subtitle" id="quick-capture-help">临时想法、刚收到的信息、待确认的事，都可以先放这里。</p>
+      <label class="field quick-capture-field" for="quick-capture-text">记录内容<textarea id="quick-capture-text" placeholder="想到什么，就先写下来……" autofocus></textarea></label>
+      <p id="quick-capture-error" class="error" role="alert"></p>
+      <div class="quick-capture-footer"><span class="meta">稍后到「灵感拾萃」集中整理</span><button class="button primary" type="submit">存入灵感拾萃</button></div>
+    </form>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="./taxonomy-model.js?v=20260924-module-names-v1"></script>
+  <script src="./taxonomy-ui.js?v=20261005-layout-v1"></script>
+  <script src="./training-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./prompt-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./training.js?v=20261005-layout-v1"></script>
+  <script src="./workflow-model.js?v=20261005-planning-v1"></script>
+  <script src="./skill-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./skills.js?v=20260925-link-affordances-v1"></script>
+  <script src="./agent-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./agents.js?v=20260925-link-affordances-v1"></script>
+  <script src="./project-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./document-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./assistant-model.js?v=20260924-taxonomy-v1"></script>
+  <script src="./home-scene.js?v=20261005-champagne-line-v4"></script>
+  <script src="./navigation.js?v=20260924-nav-v2"></script>
+  <script src="./memory-model.js?v=20261008-context-v3"></script>
+  <script src="./memory.js?v=20261008-context-v4"></script>
+  <script src="./discovery-model.js?v=20260925-discovery-v2"></script>
+  <script src="./discovery.js?v=20261004-refined-v1"></script>
+  <script src="./intelligence-model.js?v=20261021-byok-v1"></script>
+  <script src="./model-registry.js?v=20261021-byok-v1"></script>
+  <script src="./model-connector.js?v=20261021-byok-v1"></script>
+  <script src="./intelligence.js?v=20261021-byok-v1"></script>
+  <script src="./work-support-model.js?v=20261005-v2"></script>
+  <script src="./work-support.js?v=20261005-v2"></script>
+  <script src="./app.js?v=20261005-no-motion-button-v2"></script>
+</body>
+</html>
