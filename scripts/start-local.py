@@ -15,7 +15,7 @@ URL = 'http://127.0.0.1:4567/'
 def healthy():
     try:
         with urllib.request.urlopen(URL + 'api/health', timeout=2) as response:
-            return response.status == 200 and json.load(response).get('version') == 3
+            return response.status == 200 and json.load(response).get('version') == 4
     except (OSError, UnicodeError, ValueError):
         return False
 
@@ -29,7 +29,7 @@ def main():
             probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             probe.bind(('127.0.0.1', 4567))
     except OSError:
-        print('4567 端口已被占用，但工作台没有正常响应。请检查旧服务后再启动。', file=sys.stderr)
+        print('4567 端口已被占用，可能仍在运行旧版服务。请先停止旧服务，再启动新版源流。', file=sys.stderr)
         return 1
     logs = ROOT / 'runtime'
     logs.mkdir(exist_ok=True)
